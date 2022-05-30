@@ -1,0 +1,284 @@
+<div class="wrapper">
+  <app-header (currenctSelectEvent)="changeCurrency($event)"></app-header>
+
+  <table
+    mat-table
+    [dataSource]="getExpenses('Port Expenses')"
+    multiTemplateDataRows
+    class="table-port-expenses"
+  >
+    <ng-container matColumnDef="Port Expenses">
+      <th mat-header-cell *matHeaderCellDef>Port Expenses</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      <td mat-footer-cell *matFooterCellDef>Total</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Account code">
+      <th mat-header-cell *matHeaderCellDef>Account code</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.costItemAlias.accountingCode }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="Quoted">
+      <th mat-header-cell *matHeaderCellDef>Quoted</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{ calculateCost(getCost(element.costs, "Quoted")) }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{ calculateBaseCost(getCost(element.costs, "Quoted")) }}
+          </span>
+        </div>
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{
+              calculateCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Quoted")
+              )
+            }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{
+              calculateBaseCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Quoted")
+              )
+            }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Screened">
+      <th mat-header-cell *matHeaderCellDef>Screened</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{ calculateCost(getCost(element.costs, "Screened")) }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{ calculateBaseCost(getCost(element.costs, "Screened")) }}
+          </span>
+        </div>
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{
+              calculateCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Screened")
+              )
+            }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{
+              calculateBaseCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Screened")
+              )
+            }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Comment Length">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.comments.length }}
+        <button
+          mat-icon-button
+          (click)="
+            expensesExpanded = expensesExpanded === element ? null : element
+          "
+        >
+          <mat-icon>chat_bubble</mat-icon>
+        </button>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="expenses-detail">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="expensesColumns.length"
+      >
+        <div
+          class="element-comment"
+          [@detailExpand]="
+            element == expensesExpanded ? 'expanded' : 'collapsed'
+          "
+          *ngFor="let comment of element.comments"
+        >
+          <span class="comment-badge">{{ comment.type }}</span>
+          <span class="comment-comment">{{ comment.comment }}</span>
+          <span class="comment-author">{{ comment.author }}</span>
+          <span class="comment-author">{{ comment.date | date }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="expensesColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: expensesColumns"
+      class="element-row"
+      [class.expanded-row]="expensesExpanded === element"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['expenses-detail']"
+      class="detail-row"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="expensesColumns"></tr>
+  </table>
+
+  <table
+    mat-table
+    [dataSource]="getExpenses('Port Specific')"
+    multiTemplateDataRows
+    class="table-port-specific"
+  >
+    <ng-container matColumnDef="Port Specific">
+      <th mat-header-cell *matHeaderCellDef>Port Specific</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      <td mat-footer-cell *matFooterCellDef>Total</td>
+    </ng-container>
+
+    <ng-container matColumnDef="Quoted">
+      <th mat-header-cell *matHeaderCellDef>Quoted</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{ calculateCost(getCost(element.costs, "Quoted")) }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{ calculateBaseCost(getCost(element.costs, "Quoted")) }}
+          </span>
+        </div>
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{
+              calculateCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Quoted")
+              )
+            }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{
+              calculateBaseCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Quoted")
+              )
+            }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Screened">
+      <th mat-header-cell *matHeaderCellDef>Screened</th>
+      <td mat-cell *matCellDef="let element">
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{ calculateCost(getCost(element.costs, "Screened")) }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{ calculateBaseCost(getCost(element.costs, "Screened")) }}
+          </span>
+        </div>
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        <div class="amounts-wrapper">
+          <span>
+            {{ currentCurrency.toCurrency }}
+            {{
+              calculateCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Screened")
+              )
+            }}
+          </span>
+          <span>
+            {{ costs.baseCurrency.currency }}
+            {{
+              calculateBaseCost(
+                calculateTotalCosts(costs.costs[0].costItems, "Screened")
+              )
+            }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="Comment Length">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.comments?.length }}
+        <button
+          mat-icon-button
+          [disabled]="element.comments?.length !== 0"
+          (click)="
+            specificExpanded = specificExpanded === element ? null : element
+          "
+        >
+          <mat-icon>chat_bubble</mat-icon>
+        </button>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="specific-detail">
+      <td
+        mat-cell
+        *matCellDef="let element"
+        [attr.colspan]="specificColumns.length"
+      >
+        <div
+          class="element-comment"
+          [@detailExpand]="
+            element == specificExpanded ? 'expanded' : 'collapsed'
+          "
+          *ngFor="let comment of element.comments"
+        >
+          <span class="comment-badge">{{ comment.type }}</span>
+          <span class="comment-comment">{{ comment.comment }}</span>
+          <span class="comment-author">{{ comment.author }}</span>
+          <span class="comment-author">{{ comment.date | date }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="specificColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let element; columns: specificColumns"
+      class="element-row"
+      [class.expanded-row]="specificExpanded === element"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: ['specific-detail']"
+      class="detail-row"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="specificColumns"></tr>
+  </table>
+</div>

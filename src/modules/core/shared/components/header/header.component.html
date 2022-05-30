@@ -1,0 +1,21 @@
+<div class="wrapper">
+  <p class="header">COSTS</p>
+  <div class="header-right">
+    <span>Currency</span>
+    <select
+      name="currency"
+      id="currency"
+      class="select-currency"
+      [(ngModel)]="selectedRate"
+      (change)="changeCurrency()"
+    >
+      <option
+        *ngFor="let rate of exchangeRates.paymentCurrencies"
+        [value]="rate.toCurrency"
+      >
+        {{ rate.toCurrency }}
+      </option>
+    </select>
+    <span>1 USD = 1.3161 SGD</span>
+  </div>
+</div>

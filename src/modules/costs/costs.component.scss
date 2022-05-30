@@ -1,0 +1,71 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  .table-port-expenses {
+    margin-bottom: 1rem;
+  }
+
+  .table-port-expenses,
+  .table-port-specific {
+    border: 1px solid #7979ff;
+
+    th {
+      background-color: #7979ff;
+      color: #fff;
+    }
+
+    .mat-column-Port-Expenses,
+    .mat-column-Account-code,
+    .mat-column-Quoted {
+      text-align: left;
+    }
+
+    .mat-column-Quoted,
+    .mat-column-Screened {
+      text-align: right;
+    }
+
+    .mat-column-Comment-Length {
+      text-align: center;
+
+      button {
+        background-color: transparent;
+
+        mat-icon {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    .mat-column-expenses-detail,
+    .mat-column-specific-detail {
+      .element-comment {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    tr.detail-row {
+      height: 0;
+      background-color: #cdeeff;
+    }
+
+    .element-row td {
+      border-bottom-width: 0;
+    }
+
+    .element-comment {
+      overflow: hidden;
+      display: flex;
+    }
+
+    .amounts-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
